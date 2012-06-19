@@ -1,0 +1,11 @@
+{
+    "name": "google-apps-sso",
+    "version": "1.0.0",
+    "description": "Connect middleware that lets only members of your Google Apps account through.",
+    "author": "Jaka Jancar <jaka@kubje.org>",
+    "dependencies": {
+        "coffee-script": ">=1.3.3",
+        "request":       "2.9.202"
+    },
+    "main": "google-apps-sso"
+}
