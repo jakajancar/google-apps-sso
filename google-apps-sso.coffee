@@ -77,7 +77,7 @@ module.exports = (clientId, clientSecret, domain) ->
                 #    hd: 'domain.com' }
                 req.user = req.session.ga.cachedUserInfo
                 if req.user.hd != domain
-                    res.logout "#{req.user.email} is not a member of #{domain}"
+                    redirectToAuthUrl origin + req.url, "#{req.user.email} is not a member of #{domain}"
                     return
 
                 next()
