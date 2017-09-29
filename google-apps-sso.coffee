@@ -76,7 +76,7 @@ module.exports = (clientId, clientSecret, domain) ->
                 #    locale: 'en',
                 #    hd: 'domain.com' }
                 req.user = req.session.ga.cachedUserInfo
-                if req.user.email.slice(-(domain.length + 1)) != '@' + domain
+                if req.user.hd != domain
                     res.logout "#{req.user.email} is not a member of #{domain}"
                     return
 
