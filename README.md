@@ -8,12 +8,10 @@ Usage
 
  1. Register an application in the [Google APIs Console](https://code.google.com/apis/console/).
 
- 2. Include the SSO middleware (and some required standard middlewares):
+ 2. Include the SSO middleware (and `cookie-session`):
 
-        var app = connect();
-        app.use(connect.query());
-        app.use(connect.cookieParser());
-        app.use(connect.cookieSession({secret: "..."}));
+        var app = express();
+        app.use(require('cookie-session')({secret: "..."}));
         app.use(require('google-apps-sso')('app id', 'app secret', 'yourcompany.com'));
 
     You can also use any other middleware that defines `req.session`, but keep in mind that it should be signed. It should also be encrypted if the site is not served over https, or replay attacks are possible.
@@ -29,5 +27,5 @@ Usage
  4. (optional) Logout
 
     Since the middleware does not explicitly prompt the user to log in but does it automatically, it makes little sense to log the user out by just destroying the local the session: the user will just be logged right back in.
-    
+
     To clear the session as well as log the user out of Google Apps, call `res.logout()`.
