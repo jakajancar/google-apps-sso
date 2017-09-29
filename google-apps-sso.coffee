@@ -7,7 +7,7 @@ module.exports = (clientId, clientSecret, domain) ->
         origin          = "http://#{req.headers.host}" # TODO: passable in or use X-Forwarded-For for scheme
         redirectPath    = '/oauth2callback'
         refreshInterval = 60000
-        
+
         authUrl = (state) ->
             'https://accounts.google.com/o/oauth2/auth?' + querystring.stringify
                 response_type:  'code'
@@ -16,13 +16,13 @@ module.exports = (clientId, clientSecret, domain) ->
                 scope:          'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
                 state:          state
                 hd:             domain # documented only for OAuth 1, but it seems to work for 2 also
-        
+
         redirectToAuthUrl = (state, message) ->
             res.writeHead 302,
                 'Content-Type': 'text/plain; charset=utf-8'
                 Location:       authUrl(state)
             res.end message
-        
+
         # Clears the session and logs the user out
         res.logout = (message='Logging out...') ->
             req.session = null
@@ -31,7 +31,7 @@ module.exports = (clientId, clientSecret, domain) ->
                 # `continue` accepts only Google URLs, but luckily oauth2/auth is Google :)
                 Location:       'https://www.google.com/accounts/Logout?&continue=' + encodeURIComponent(authUrl(origin + '/'))
             res.end message
-        
+
         # OAuth 2 callback
         if req.url.indexOf(redirectPath) == 0
             # Exchange code for token
@@ -57,7 +57,7 @@ module.exports = (clientId, clientSecret, domain) ->
                         redirectToAuthUrl req.query.state, 'Could not exchange code for token.'
             )
             return
-        
+
         if not req.session.ga
             # Not authenticated, redirect to login/allow access
             redirectToAuthUrl origin + req.url, 'Please log in.'
@@ -68,9 +68,9 @@ module.exports = (clientId, clientSecret, domain) ->
                 if req.user.email.slice(-(domain.length + 1)) != '@' + domain
                     res.logout "#{req.user.email} is not a member of #{domain}"
                     return
-                
+
                 next()
-            
+
             # Refresh user info if needed
             if (new Date - (req.session.ga.lastRefresh or 0)) >= refreshInterval
                 request(
