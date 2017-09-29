@@ -24,13 +24,13 @@ module.exports = (clientId, clientSecret, domain) ->
             res.end message
 
         # Clears the session and logs the user out
-        res.logout = (message='Logging out...') ->
+        res.logout = ->
             req.session = null
             res.writeHead 302,
                 'Content-Type': 'text/plain; charset=utf-8'
                 # `continue` accepts only Google URLs, but luckily oauth2/auth is Google :)
                 Location:       'https://www.google.com/accounts/Logout?&continue=' + encodeURIComponent(authUrl(origin + '/'))
-            res.end message
+            res.end 'Logging out...'
 
         # OAuth 2 callback
         if req.url.indexOf(redirectPath) == 0
@@ -96,7 +96,7 @@ module.exports = (clientId, clientSecret, domain) ->
                             req.session.ga.cachedUserInfo = JSON.parse(body)
                             cachedUserInfoReady()
                         else
-                            res.logout 'Could not get user info.'
+                            redirectToAuthUrl origin + req.url, 'Could not get user info.'
                 )
             else
                 cachedUserInfoReady()
