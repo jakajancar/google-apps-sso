@@ -64,6 +64,17 @@ module.exports = (clientId, clientSecret, domain) ->
         else
             # Authenticated
             cachedUserInfoReady = ->
+                #  { id: '1234567890',
+                #    email: 'person@domain.com',
+                #    verified_email: true,
+                #    name: 'First Last',
+                #    given_name: 'First',
+                #    family_name: 'Last',
+                #    link: 'https://plus.google.com/123456790',
+                #    picture: 'https://lh3.googleusercontent.com/.../photo.jpg',
+                #    gender: 'male',
+                #    locale: 'en',
+                #    hd: 'domain.com' }
                 req.user = req.session.ga.cachedUserInfo
                 if req.user.email.slice(-(domain.length + 1)) != '@' + domain
                     res.logout "#{req.user.email} is not a member of #{domain}"
