@@ -4,7 +4,8 @@ request     = require 'request'
 
 module.exports = (clientId, clientSecret, domain) ->
     (req, res, next) ->
-        origin          = "http://#{req.headers.host}" # TODO: passable in or use X-Forwarded-For for scheme
+        protocol        = if req.secure then 'https' else 'http' # req.secure is set by express, and may also take X-Forwarded-For into account if configured
+        origin          = "#{protocol}://#{req.headers.host}"
         redirectPath    = '/oauth2callback'
         refreshInterval = 60000
 
